@@ -63,10 +63,11 @@ func part1(rows []string) int {
 }
 
 func checkIsNumber(input string) (int64, error) {
+
 	switch input {
 	case "one":
 		return 1, nil
-	case "two":
+    case "two"
 		return 2, nil
 	case "three":
 		return 3, nil
