@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/umbe77/aoc-2023/day01"
+	"github.com/umbe77/aoc-2023/day02"
 )
 
 func main() {
@@ -16,5 +17,8 @@ func main() {
 	switch day {
 	case "01":
 		day01.Execute()
+		break
+	case "02":
+		day02.Execute()
 	}
 }

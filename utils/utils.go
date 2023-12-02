@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bufio"
+	"bytes"
 	"log"
 	"os"
 	"strconv"
@@ -40,6 +41,57 @@ func ReadAllFile(fPath string) string {
 		panic(err)
 	}
 	return string(buf)
+}
+
+
+func IsDigit(c rune) bool {
+	return c >= '0' && c <= '9'
+}
+
+func IsAplpha(c rune) bool {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+}
+
+func IsSpace(c rune) bool {
+    return c == ' ' || c == '\t'
+}
+
+func ReadInt(r *bufio.Reader) int {
+    var (
+        buf bytes.Buffer
+    )
+    r.UnreadRune()
+    for {
+        c, _, err := r.ReadRune()
+        if err != nil {
+            break
+        }
+        if !IsDigit(c) {
+            r.UnreadRune()
+            break
+        }
+        buf.WriteRune(c)
+    }
+    return Atoi(buf.String())
+}
+
+func ReadString(r *bufio.Reader) string {
+    var (
+        buf bytes.Buffer
+    )
+    r.UnreadRune()
+    for {
+        c, _, err := r.ReadRune()
+        if err != nil {
+            break
+        }
+        if !IsAplpha(c) {
+            r.UnreadRune()
+            break
+        }
+        buf.WriteRune(c)
+    }
+    return buf.String()
 }
 
 func Atoi(a string) int {
