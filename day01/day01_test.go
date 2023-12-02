@@ -24,9 +24,10 @@ func TestPart2(t *testing.T) {
 		"xtwone3four",
 		"4nineeightseven2",
 		"zoneight234",
-		"7pqrstsixteen"}
+		"7pqrstsixteen",
+	}
 
-	result := part1(input)
+	result := part2(input)
 	if result != 281 {
 		t.Errorf("Expcetd 281 got %d", result)
 	}

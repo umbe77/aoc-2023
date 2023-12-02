@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"io"
 	"strconv"
 	"strings"
 
@@ -12,11 +13,11 @@ import (
 
 func Execute() {
 	rows := make([]string, 0)
-	utils.ReadFile("day01/input_test.txt", func(line string) {
+    utils.ReadFile("day01/input.txt", func(line string) {
 		rows = append(rows, line)
 	})
 
-	// fmt.Printf("Part 1: %d\n", part1(rows))
+	fmt.Printf("Part 1: %d\n", part1(rows))
 	fmt.Printf("Part 2: %d\n", part2(rows))
 }
 
@@ -62,12 +63,11 @@ func part1(rows []string) int {
 	return total
 }
 
-func checkIsNumber(input string) (int64, error) {
-
-	switch input {
+func getNumFromLit(lit string) (int64, error) {
+	switch lit {
 	case "one":
 		return 1, nil
-    case "two"
+	case "two":
 		return 2, nil
 	case "three":
 		return 3, nil
@@ -84,39 +84,61 @@ func checkIsNumber(input string) (int64, error) {
 	case "nine":
 		return 9, nil
 	}
-	return 0, fmt.Errorf("not a number")
+	return -1, fmt.Errorf("not a number")
+}
+
+func checkIsNumber(r *strings.Reader) (int64, error) {
+	var (
+		n   int64 = -1
+		i   int
+		buf bytes.Buffer
+	)
+	for i = 0; i < 5; i++ {
+		c, _, err := r.ReadRune()
+		if err != nil {
+			if i == 0 {
+				return -2, err
+			}
+			r.Seek(int64(i-1)*-1, io.SeekCurrent)
+			return -3, nil
+		}
+		if i == 0 && isDigit(c) {
+			n, _ = strconv.ParseInt(string(c), 10, 32)
+			return n, nil
+		}
+		buf.WriteRune(c)
+		lit := buf.String()
+		n, err := getNumFromLit(lit)
+		if err == nil {
+            r.Seek(int64(i-1)*-1, io.SeekCurrent)
+			return n, nil
+		}
+	}
+
+    r.Seek(-4, io.SeekCurrent)
+
+	return -1, nil
 }
 
 func getNum2(row string) int {
 	var (
 		first, last int64
-		buf         bytes.Buffer
 	)
 	first = -1
 	last = 0
-	r := bufio.NewReader(strings.NewReader(row))
+	r := strings.NewReader(row)
 
 	for {
-		var num int64 = -1
-		c, _, err := r.ReadRune()
+
+		num, err := checkIsNumber(r)
 		if err != nil {
 			break
 		}
-		buf.WriteRune(c)
-        fmt.Println(buf.String())
-		cNum, isNum := checkIsNumber(buf.String())
-		if isNum == nil {
-			num = cNum
-		} else if isDigit(c) {
-			num, _ = strconv.ParseInt(string(c), 10, 32)
-		}
-        fmt.Println(num)
-		if num != -1 {
+		if num >= 0 {
 			last = num
 			if first == -1 {
 				first = last
 			}
-			buf.Reset()
 		}
 	}
 	res, _ := strconv.Atoi(fmt.Sprintf("%d%d", first, last))
@@ -127,7 +149,6 @@ func part2(rows []string) int {
 	total := 0
 	for _, row := range rows {
 		l := getNum2(row)
-        fmt.Println(l)
 		total = total + l
 	}
 	return total
