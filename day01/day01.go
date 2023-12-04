@@ -13,7 +13,7 @@ import (
 
 func Execute() {
 	rows := make([]string, 0)
-    utils.ReadFile("day01/input.txt", func(line string) {
+	utils.ReadFile("day01/input.txt", func(line string) {
 		rows = append(rows, line)
 	})
 
@@ -110,12 +110,12 @@ func checkIsNumber(r *strings.Reader) (int64, error) {
 		lit := buf.String()
 		n, err := getNumFromLit(lit)
 		if err == nil {
-            r.Seek(int64(i-1)*-1, io.SeekCurrent)
+			r.Seek(int64(i-1)*-1, io.SeekCurrent)
 			return n, nil
 		}
 	}
 
-    r.Seek(-4, io.SeekCurrent)
+	r.Seek(-4, io.SeekCurrent)
 
 	return -1, nil
 }
