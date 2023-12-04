@@ -43,55 +43,54 @@ func ReadAllFile(fPath string) string {
 	return string(buf)
 }
 
-
 func IsDigit(c rune) bool {
 	return c >= '0' && c <= '9'
 }
 
 func IsAplpha(c rune) bool {
-    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }
 
 func IsSpace(c rune) bool {
-    return c == ' ' || c == '\t'
+	return c == ' ' || c == '\t'
 }
 
 func ReadInt(r *bufio.Reader) int {
-    var (
-        buf bytes.Buffer
-    )
-    r.UnreadRune()
-    for {
-        c, _, err := r.ReadRune()
-        if err != nil {
-            break
-        }
-        if !IsDigit(c) {
-            r.UnreadRune()
-            break
-        }
-        buf.WriteRune(c)
-    }
-    return Atoi(buf.String())
+	var (
+		buf bytes.Buffer
+	)
+	r.UnreadRune()
+	for {
+		c, _, err := r.ReadRune()
+		if err != nil {
+			break
+		}
+		if !IsDigit(c) {
+			r.UnreadRune()
+			break
+		}
+		buf.WriteRune(c)
+	}
+	return Atoi(buf.String())
 }
 
 func ReadString(r *bufio.Reader) string {
-    var (
-        buf bytes.Buffer
-    )
-    r.UnreadRune()
-    for {
-        c, _, err := r.ReadRune()
-        if err != nil {
-            break
-        }
-        if !IsAplpha(c) {
-            r.UnreadRune()
-            break
-        }
-        buf.WriteRune(c)
-    }
-    return buf.String()
+	var (
+		buf bytes.Buffer
+	)
+	r.UnreadRune()
+	for {
+		c, _, err := r.ReadRune()
+		if err != nil {
+			break
+		}
+		if !IsAplpha(c) {
+			r.UnreadRune()
+			break
+		}
+		buf.WriteRune(c)
+	}
+	return buf.String()
 }
 
 func Atoi(a string) int {
@@ -120,4 +119,16 @@ func Abs(a int) int {
 		return -a
 	}
 	return a
+}
+
+func PowInt(a, b int) int {
+	p := 1
+	for b > 0 {
+		if b&1 != 0 {
+			p *= a
+		}
+		b >>= 1
+		a *= a
+	}
+	return p
 }
