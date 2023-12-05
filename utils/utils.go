@@ -48,7 +48,7 @@ func IsDigit(c rune) bool {
 }
 
 func IsAplpha(c rune) bool {
-	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '-'
 }
 
 func IsSpace(c rune) bool {
