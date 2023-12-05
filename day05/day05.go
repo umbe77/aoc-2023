@@ -113,49 +113,54 @@ func part1(a Almanc) int {
 	return minLoc
 }
 
-func getLocation2(seed, seedEnd int, a Almanc) int {
-	current := seed
-	// fmt.Printf("seed: %d, seedEnd: %d\n", seed, seedEnd)
-	for _, m := range a.matrices {
-		mn := current
-		for _, y := range m.m {
-			dstRangeStart := y[0]
-			srcRangeStart := y[1]
-			rangeLen := y[2]
-			// fmt.Println(current, srcRangeStart, rangeLen, srcRangeStart+rangeLen, current >= srcRangeStart, current < srcRangeStart+rangeLen)
-			// if current >= srcRangeStart && current < srcRangeStart+rangeLen {
-			// 	current = current - srcRangeStart + dstRangeStart
-			// 	break
-			// }
-			if current >= srcRangeStart && current < srcRangeStart+rangeLen {
-				c := current - srcRangeStart + dstRangeStart
-				// fmt.Println(c)
-				if c < mn {
-					mn = c
-				}
+type Range struct {
+	start, end int
+}
+
+func getRanges(rs []Range, m *Matrix) []Range {
+	output := make([]Range, 0)
+	for _, y := range m.m {
+		for _, r := range rs {
+			dstRange := y[0]
+			start2 := y[1]
+			end2 := start2 + y[2] - 1
+			start := r.start
+			if start2 > r.start {
+				start = start2
 			}
-			if seedEnd < srcRangeStart+rangeLen && current >= srcRangeStart {
-				c := current - srcRangeStart + dstRangeStart
-				// fmt.Println(c)
-				if c < mn {
-					mn = c
-				}
+
+			end := r.end
+			if end2 < r.end {
+				end = end2
 			}
-			if seedEnd < srcRangeStart+rangeLen && current <= srcRangeStart {
-				c := srcRangeStart
-				// fmt.Println(c)
-				if c < mn {
-					mn = c
-				}
+
+			if end < r.start || start > end {
+				continue
+			}
+
+			output = append(output, Range{
+				start: start - start2 + dstRange,
+				end:   (start - start2 + dstRange) + (end - start),
+			})
+
+			if r.start < start {
+				output = append(output, Range{start: r.start, end: start - 1})
+			}
+
+			if r.end > end {
+				output = append(output, Range{start: end + 1, end: r.end})
 			}
 
 		}
-		// fmt.Println("min", mn)
-		current = mn
-		// fmt.Printf("%s: %d - ", strings.Split(m.name, "-")[2], current)
 	}
-	fmt.Println()
-	return current
+	return output
+}
+
+func getLocation2(seed, seedEnd int, a Almanc) int {
+
+	// r := Range{start: seed, end: seed}
+    return 0
+
 }
 
 func part2(a Almanc) int {
