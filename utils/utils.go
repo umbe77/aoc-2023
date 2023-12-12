@@ -132,3 +132,29 @@ func PowInt(a, b int) int {
 	}
 	return p
 }
+
+// Great common divisor
+func Gcd(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+// Least common multiplier
+func MustLcm(integers []int) int {
+	if len(integers) < 2 {
+		panic("not enough number to calculate lcm")
+	}
+	a := integers[0]
+	b := integers[1]
+	result := a * b / Gcd(a, b)
+
+	for i := 2; i < len(integers); i++ {
+		result = MustLcm([]int{result, integers[i]})
+	}
+
+	return result
+}
